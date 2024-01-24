@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -19,6 +22,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //load the values from .properties file
+        val keystoreFile = project.rootProject.file("apikey.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
+        val apiKey = properties.getProperty("API_KEY") ?: ""
+        buildConfigField("String", "API_KEY", apiKey)
     }
 
     buildTypes {
